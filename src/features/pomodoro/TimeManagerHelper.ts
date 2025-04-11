@@ -9,6 +9,6 @@ export function getCurrentTimeManager() {
   if (currentManager) {
     return currentManager;
   }
-  currentManager = new TimeManagerSubject(new Pomodoro({ durationInMin: 0.1 }));
+  currentManager = new TimeManagerSubject(new Pomodoro());
   return currentManager;
 }
