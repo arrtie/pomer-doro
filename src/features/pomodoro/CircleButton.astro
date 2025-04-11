@@ -1,0 +1,35 @@
+---
+const props = Astro.props;
+---
+
+<button {...props} class:list={["circle-button", props.class]}>
+  <slot />
+</button>
+
+<style>
+  .circle-button {
+    --button-bg-color: var(--primary-color, #333);
+    --button-accent-color: var(--on-surface, #fff);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: 2px solid var(--button-accent-color);
+    background: var(--button-bg-color);
+    color: var(--button-accent-color);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    
+    &:hover:not(:disabled), &:active:not(:disabled) {
+      transform: scale(1.15);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+</style>

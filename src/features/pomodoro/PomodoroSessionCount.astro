@@ -1,0 +1,58 @@
+---
+---
+
+<script>
+  import { pipe } from "fp-ts/lib/function";
+  import {match, none, some, map } from "fp-ts/lib/Option";
+  import {subscribeToPomCount} from "./pomodoroSessionCount"
+  import Observer from "@src/patterns/Observer";
+  
+  function makeRender() {
+    return pipe(
+      document.querySelector<HTMLElement>(".pomodoro-session-count"),
+      (el) => {
+        if (el == null) {
+          console.error("Pomodoro Count element not found");
+          return none;
+        }
+        return some(el);
+      },
+      map((el) => {
+        return (textContent: string) => {
+          el.textContent = textContent;
+        };
+      }
+      ))
+    }
+
+  const refreshPomCount = (pomCount: number) => {
+    return pipe(
+      pomCount,
+      (pomCount) => pomCount === 0 ? none : some(pomCount),
+      match(
+        () => none,
+       (sessionCount)=> {
+        return pipe(
+          makeRender(),
+          map((render) => {
+            render(
+              `Poms completed: ${sessionCount}`,
+            );
+          }),
+        )
+       }
+    ));
+  }
+
+  subscribeToPomCount(new Observer(refreshPomCount));
+  
+</script>
+
+<p class="pomodoro-session-count" data-testid="pomodoro-session-count"></p>
+
+<style>
+  p {
+    color: var(--on-surface);
+    z-index: 1;
+  }
+</style>

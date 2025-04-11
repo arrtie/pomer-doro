@@ -1,0 +1,30 @@
+/** @format */
+
+:root {
+  --heading-font-family: "Press Start 2P", system-ui;
+  --base-color: #eef2ff;
+  --base-color-contrast: #050918;
+  --main-background: var(--base-color);
+  --font-color: var(--base-color-contrast);
+  --button-border-radius: 4px;
+  --dark-floating-color: rgba(255, 255, 255, 0.1);
+  --light-floating-color: rgba(0, 0, 0, 0.4);
+  --primary-background-color: rebeccapurple;
+  --primary-color: rgb(102, 51, 153);
+  --primary-color-rgb: 102, 51, 153;
+  /* Header */
+  --header-height: 60px;
+  --header-offset: 76px;
+  /* Navigation */
+  --navigation-background-color: var(--primary-background-color);
+  --navigation-font-family: var(--heading-font-family);
+  --navigation-link-color: var(--base-color);
+  --navigation-link-hover-color: var(--navigation-link-color);
+
+  /* design */
+  --shadow-gradient: linear-gradient(
+    rgba(0, 0, 0, 0.1),
+    60%,
+    rgba(0, 0, 0, 0.4)
+  );
+}

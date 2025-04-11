@@ -1,0 +1,34 @@
+---
+import TimerButtons from "./TimerButtons.astro";
+import TimerDisplay from "./TimerDisplay.astro";
+---
+
+<script>
+  import "./CompletionHandler.ts"
+</script>
+
+<section class="pomodoro centered">
+  <h1>Pomodoro Timer</h1>
+  <TimerDisplay />
+  <TimerButtons />
+</section>
+
+<style>
+  h1 {
+    font-size: 5vh;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pomodoro {
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+import PomodoroSessionCount from "./PomodoroSessionCount.astro";
+---
+
+<script>
+  import { flow, pipe } from "fp-ts/lib/function";
+  import { fromPredicate, isSome } from "fp-ts/lib/Option";
+  import { TimeEvent } from "./TimeManagerSubject";
+  import Observer from "@src/patterns/Observer";
+  import { getCurrentTimeManager } from "./TimeManagerHelper";
+  const timeManager = getCurrentTimeManager();
+
+  const timeCountdown = document.querySelector<HTMLElement>(
+    '[data-testid="remaining-time"]'
+  );
+  const timerCircle = document.querySelector<HTMLElement>(".timer");
+
+  function formatTime(millisecondsLeft: number): string {
+    const minutesRemaining = Math.floor(millisecondsLeft / 1000 / 60);
+    const remainingSeconds = Math.floor((millisecondsLeft / 1000) % 60);
+    return `${minutesRemaining.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+  }
+
+  const updateCountdown = (timeTilEnd: number) => {
+    pipe(
+      timeCountdown,
+      fromPredicate((el) => el != null),
+      (optEl) => {
+        if (isSome(optEl)) {
+          optEl.value.textContent = formatTime(timeTilEnd);
+        }
+      }
+    );
+  };
+
+  const updateTimerCircle = (elapsedTime:number, totalTime:number) => {
+    pipe(
+        timerCircle,
+        fromPredicate((el) => el != null),
+        (optEl) => {
+          if (isSome(optEl)) {
+            optEl.value.style.setProperty(
+              "--completion",
+              (elapsedTime / (totalTime)) *
+                100 +
+                "%"
+            );
+          }
+        }
+      );
+  }
+
+  const userInterfaceObserver = new Observer<TimeEvent>((data) => {
+    requestAnimationFrame(() => {
+      // update countdown
+      updateCountdown(data.remainingTime);
+      // update timerCircle
+      updateTimerCircle(data.elapsedTime, data.elapsedTime + data.remainingTime)
+    });
+  });
+
+  // attach the userInterface observer
+  timeManager.attach(userInterfaceObserver);
+
+  const getDurationLength = () => {
+    return timeManager.getDurationInMs();
+  };
+
+  requestAnimationFrame(flow(getDurationLength, updateCountdown));
+</script>
+
+<section class="timer centered">
+  <p data-testid="remaining-time"></p>
+  <PomodoroSessionCount />
+</section>
+
+<style>
+  .centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .timer {
+    --completion: 0%;
+    flex-direction: column;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    width: 60%;
+    max-width: 600px;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    will-change: opacity;
+    background-image: conic-gradient(
+      var(--primary-background-color) 0% var(--completion),
+      white var(--completion) 100%
+    );
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      background-color: var(--main-background);
+      border-radius: 100%;
+    }
+
+    & > p {
+      z-index: 1;
+    }
+  }
+
+  @media (min-aspect-ratio: 1 / 1) {
+    .timer {
+      max-width: 50vh;
+      max-height: 50vh;
+    }
+  }
+</style>

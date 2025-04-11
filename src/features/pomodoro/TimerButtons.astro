@@ -1,0 +1,82 @@
+---
+import CircleButton from "./CircleButton.astro";
+---
+
+<script>
+  import Observer from "@src/patterns/Observer";
+import {getCurrentTimeManager} from "./TimeManagerHelper"
+import type { TimeEvent } from "./TimeManagerSubject";
+import {postPomodoroSession} from "./pomodoro_sessions/getAndPost";
+  
+  const timeManager = getCurrentTimeManager();
+  const startButton = document.querySelector('[data-testid="start-button"]');
+  const pauseButton = document.querySelector('[data-testid="pause-button"]');
+  const resetButton = document.querySelector('[data-testid="reset-button"]');
+  const incrementButton = document.querySelector('[data-testid="increment-button"]');
+
+  incrementButton?.addEventListener("click", () => {
+    const now = Date.now()
+    postPomodoroSession([now - 1500000, now])
+  });
+      
+
+  const requestStart = timeManager.request("start");
+  
+  function clickStart(){
+    requestStart();
+    resetButton?.removeAttribute("disabled");
+  }
+
+  startButton?.addEventListener("click", clickStart);
+
+  const requestStop = timeManager.request("stop");
+  
+  pauseButton?.addEventListener("click", () => {
+    requestStop();
+  });
+  
+  const requestReset = timeManager.request("reset");
+  
+  resetButton?.addEventListener("click", () => {
+    requestReset();
+    resetButton?.setAttribute("disabled", "true");
+  });
+
+  const setButtonsToFinished = ()=> {
+      pauseButton?.setAttribute("disabled", "true");
+      startButton?.setAttribute("disabled", "true");
+    }
+
+  const timerButtonsObserver = new Observer<TimeEvent>((data) => {
+    requestAnimationFrame(() => {
+      // update play and pause buttons
+      if(data.remainingTime === 0) {
+        setButtonsToFinished();
+      } else {
+        if(data.isPaused){
+            pauseButton?.setAttribute("disabled", "true")
+            startButton?.removeAttribute("disabled")
+        }  else {
+          startButton?.setAttribute("disabled", "true")
+          pauseButton?.removeAttribute("disabled")
+          }
+      }
+    })
+  })
+// attach the timerButtons observer
+  timeManager.attach(timerButtonsObserver);
+</script>
+
+<div class="buttons-container">
+  <CircleButton data-testid="start-button">Start</CircleButton>
+  <CircleButton data-testid="pause-button" disabled="true">Pause</CircleButton>
+  <CircleButton data-testid="reset-button" disabled="true">Reset</CircleButton>
+  <CircleButton data-testid="increment-button" >Add</CircleButton>
+</div>
+
+<style>
+  .buttons-container {
+    display: flex;
+    gap: 1rem;
+  }
+</style>
