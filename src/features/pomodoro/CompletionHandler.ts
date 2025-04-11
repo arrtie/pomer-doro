@@ -5,7 +5,7 @@ import SuccessPlayer from "./successPlayer";
 import Observer from "@src/patterns/Observer";
 import { getCurrentTimeManager } from "./TimeManagerHelper";
 
-const successSoundSource = "/success-jingle.ogg";
+const successSoundSource = "/pomer-doro/success-jingle.ogg";
 const timeManager = getCurrentTimeManager();
 let playerIsInitialized = false;
 
