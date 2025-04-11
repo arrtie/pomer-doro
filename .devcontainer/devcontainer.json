@@ -8,8 +8,8 @@
   "workspaceFolder": "/opt/pomer-doro",
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [4321],
-  // "portsAttributes": { "4321": { "label": "Application" } },
+  // "forwardPorts": [5432],
+  // "portsAttributes": { "5432": { "label": "Application" } },
 
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "npm i",

@@ -10,7 +10,7 @@ Pomer-doro uses Astro, Typescript, and Playwright.
 
 > this project is setup to run within a [Devcontainer](https://code.visualstudio.com/docs/devcontainers/tutorial)
 
-To start the development server on port 4321:
+To start the development server on port 5432:
 
 ```bash
 npm run dev
@@ -22,7 +22,7 @@ Or run in debug mode within VSCode's side bar
 - from the dropdown select `Debug Session`
 - click the play button (green triangle)
 
-This will make the application available at <http://localhost:4321> and accessible on your local network.
+This will make the application available at <http://localhost:5432> and accessible on your local network.
 
 ### Building
 

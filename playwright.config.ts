@@ -15,7 +15,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
 
   use: {
-    baseURL: "http://localhost:4321",
+    baseURL: "http://localhost:5432",
   },
 
   /* Configure projects for major browsers */
@@ -29,7 +29,7 @@ export default defineConfig({
   /* Run your Astro dev server before starting the tests */
   webServer: {
     command: "npm run dev",
-    port: 4321,
+    port: 5432,
     reuseExistingServer: !process.env.CI,
     stdout: "pipe",
     stderr: "pipe",

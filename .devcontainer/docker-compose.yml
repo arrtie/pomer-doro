@@ -6,7 +6,7 @@ services:
     command: ["/bin/bash"]
     image: node:23-bookworm-slim
     ports:
-      - 4321:4321
+      - 5432:5432
     tty: true
     volumes:
       - type: bind

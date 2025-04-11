@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --port 5432",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@astrojs/cloudflare": "^12.4.0",
     "@fontsource/press-start-2p": "^5.1.1",
-    "@fontsource/roboto": "^5.1.1",
+    "@fontsource/roboto": "^5.2.5",
     "@grafana/faro-web-sdk": "^1.14.3",
     "@grafana/faro-web-tracing": "^1.14.3",
     "astro": "^5.1.6",

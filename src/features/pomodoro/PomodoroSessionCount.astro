@@ -20,6 +20,7 @@
       map((el) => {
         return (textContent: string) => {
           el.textContent = textContent;
+          el.style.display = "inline-block";
         };
       }
       ))
@@ -52,7 +53,8 @@
 
 <style>
   p {
-    color: var(--on-surface);
+    color: var(--on-bg-color);
     z-index: 1;
+    display: none;
   }
 </style>
