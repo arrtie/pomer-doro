@@ -4,21 +4,13 @@ import CircleButton from "./CircleButton.astro";
 
 <script>
   import Observer from "@src/patterns/Observer";
-import {getCurrentTimeManager} from "./TimeManagerHelper"
-import type { TimeEvent } from "./TimeManagerSubject";
-import {postPomodoroSession} from "./pomodoro_sessions/getAndPost";
+  import {getCurrentTimeManager} from "./TimeManagerHelper"
+  import type { TimeEvent } from "./TimeManagerSubject";
   
   const timeManager = getCurrentTimeManager();
   const startButton = document.querySelector('[data-testid="start-button"]');
   const pauseButton = document.querySelector('[data-testid="pause-button"]');
   const resetButton = document.querySelector('[data-testid="reset-button"]');
-  const incrementButton = document.querySelector('[data-testid="increment-button"]');
-
-  incrementButton?.addEventListener("click", () => {
-    const now = Date.now()
-    postPomodoroSession([now - 1500000, now])
-  });
-      
 
   const requestStart = timeManager.request("start");
   
@@ -63,7 +55,7 @@ import {postPomodoroSession} from "./pomodoro_sessions/getAndPost";
       }
     })
   })
-// attach the timerButtons observer
+  // attach the timerButtons observer
   timeManager.attach(timerButtonsObserver);
 </script>
 
@@ -71,7 +63,6 @@ import {postPomodoroSession} from "./pomodoro_sessions/getAndPost";
   <CircleButton data-testid="start-button">Start</CircleButton>
   <CircleButton data-testid="pause-button" disabled="true">Pause</CircleButton>
   <CircleButton data-testid="reset-button" disabled="true">Reset</CircleButton>
-  <CircleButton data-testid="increment-button" >Add</CircleButton>
 </div>
 
 <style>

@@ -4,4 +4,5 @@
 
 html {
   background-color: var(--bg-color);
+  font-family: var(--primary-font-family);
 }

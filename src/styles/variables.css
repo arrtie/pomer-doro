@@ -1,7 +1,10 @@
 /** @format */
 
 :root {
-  --bg-color: #eef2ff;
+  /* palette */
+  --bg-color: rgb(250, 250, 250);
   --primary-color: tomato;
   --on-bg-color: #1e1e1e;
+  /* font */
+  --primary-font-family: "Press Start 2P", system-ui;
 }
