@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-Pomer-doro uses Astro, Typescript, and Playwright.
+Pomer-doro is built with Astro and Typescript and tested with Playwright and Vitest.
 
 ### Development
 
@@ -32,7 +32,7 @@ To create a production build:
 npm run build
 ```
 
-This command runs TypeScript compilation first, then builds the project with Vite.
+This command runs TypeScript compilation first, then builds the project with Astro.
 
 ### Preview
 
@@ -44,8 +44,14 @@ npm run preview
 
 ### Testing
 
-The project uses Playwright for testing. To run tests in watch mode:
+To run Playwright tests in watch mode:
 
 ```bash
 npm run test
+```
+
+To run Vitest in watch mode:
+
+```bash
+npm run vt
 ```
