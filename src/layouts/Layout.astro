@@ -10,6 +10,10 @@ import "@styles/global.css"
 		<link rel="icon" type="image/x-icon" href="/pomer-doro/favicon.ico">
 		<meta name="generator" content={Astro.generator} />
 		<title>Pomer-Doro</title>
+		<script>
+			import themeSetter from "@features/color-scheme/handler.ts";
+			themeSetter();
+		</script>
 	</head>
 	<body>
 		<main>
