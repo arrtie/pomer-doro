@@ -4,13 +4,13 @@ import { test, expect, type Page } from "@playwright/test";
 
 test.describe("when initially loaded", () => {
   test("before start", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/pomer-doro");
     await expect(page.getByTestId("remaining-time")).toHaveText("25:00");
   });
 
   test.describe("when has no pom history", () => {
     test("should have nothing displayed", async ({ page }) => {
-      await page.goto("/");
+      await page.goto("/pomer-doro");
       await expect(
         page.locator("data-testid=['pomodoro-session-count']")
       ).toHaveCount(0);
@@ -28,7 +28,7 @@ test.describe("when start is clicked", () => {
   ].forEach(({ elapsedMinutes, expected }) => {
     test.beforeEach(async ({ page }) => {
       await page.clock.install();
-      await page.goto("/");
+      await page.goto("/pomer-doro");
       await expect(page.getByTestId("remaining-time")).toHaveText("25:00");
       await page.getByRole("button", { name: "Start" }).click();
     });
@@ -57,7 +57,7 @@ test.describe("when start is clicked", () => {
         test(`the remaining time displayed should be ${expected}`, async ({
           page,
         }) => {
-          await page.goto("/");
+          await page.goto("/pomer-doro");
           await expect(page.getByTestId("remaining-time")).toHaveText("25:00");
           await page.getByRole("button", { name: "Start" }).click();
           await page.clock.fastForward(elapsedMinutes);
@@ -71,7 +71,7 @@ test.describe("when start is clicked", () => {
   test.describe("when the duration time has elapsed", () => {
     const startAndExhaust = async (page: Page) => {
       await page.clock.install();
-      await page.goto("/");
+      await page.goto("/pomer-doro");
       const startButton = page.getByRole("button", { name: "Start" });
       await startButton.click();
       await page.clock.fastForward("25:00");

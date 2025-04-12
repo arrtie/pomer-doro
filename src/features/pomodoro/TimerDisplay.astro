@@ -71,8 +71,8 @@ import PomodoroSessionCount from "./PomodoroSessionCount.astro";
 
 <section class="timer centered">
   <p data-testid="remaining-time"></p>
-  <PomodoroSessionCount />
 </section>
+<PomodoroSessionCount />
 
 <style>
   .centered {
@@ -93,8 +93,8 @@ import PomodoroSessionCount from "./PomodoroSessionCount.astro";
     border-radius: 100%;
     will-change: opacity;
     background-image: conic-gradient(
-      var(--primary-color) 0% var(--completion),
-      white var(--completion) 100%
+      var(--primary-color-faded) 0% var(--completion),
+      var(--primary-color) var(--completion) 100%
     );
     position: relative;
 
