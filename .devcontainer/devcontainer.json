@@ -25,7 +25,9 @@
         "ms-vscode-remote.remote-containers",
         "astro-build.astro-vscode",
         "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "vitest.explorer",
+        "ms-playwright.playwright"
       ]
     }
   }
