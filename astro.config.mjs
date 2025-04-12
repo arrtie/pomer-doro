@@ -8,4 +8,7 @@ export default defineConfig({
   server: { host: true },
   site: "https://arrtie.github.io",
   base: "/pomer-doro",
+  devToolbar: {
+    enabled: false,
+  },
 });
