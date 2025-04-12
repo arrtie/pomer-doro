@@ -8,14 +8,14 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./src/tests",
-  timeout: 30000,
+  timeout: 5000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
 
   use: {
-    baseURL: "http://localhost:5432",
+    baseURL: "http://localhost:5432/pomer-doro",
   },
 
   /* Configure projects for major browsers */
