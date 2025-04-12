@@ -2,6 +2,10 @@
 
 # Pomer-doro
 
+## Live Demo
+
+Check out a live demo of [Pomer-Doro Timer](https://arrtie.github.io/pomer-doro/)
+
 ## Getting Started
 
 Pomer-doro is built with Astro and Typescript and tested with Playwright and Vitest.
