@@ -1,14 +1,9 @@
 /** @format */
 
 import { useEffect, useState } from "react";
-import { styled } from "styled-components";
 import Dumbbell from "./Dumbbell";
-
-const Visualization = styled.svg`
-  height: 100%;
-  width: 100%;
-  background: pink;
-`;
+import Visualization from "./Visualization";
+import YAxis from "./YAxis";
 
 interface MakeDumbbell {
   x: number;
@@ -38,26 +33,65 @@ function makeDumbbell(props: MakeDumbbell) {
   return dumbballStats;
 }
 
-function makeDumbbellFromSession(startTime?: number, endTime?: number) {
-  return makeDumbbell({ x: 50, y1: 100, y2: 200, radius: 8 });
+function makeDumbbellFromSession(start: number, stop: number) {
+  const width = 500;
+  const height = 500;
+  const timeFrameInMs = 12 * 60 * 60 * 1000;
+  const startingTime = new Date().setHours(8, 0, 0, 0);
+  const pxToTimeRatio = height / timeFrameInMs;
+  const timeY1 = start - startingTime;
+  const timeY2 = stop - startingTime;
+
+  return makeDumbbell({
+    x: width / 2,
+    y1: timeY1 * pxToTimeRatio,
+    y2: timeY2 * pxToTimeRatio,
+    radius: 4,
+  });
 }
 
+const containerProps = {
+  width: 500,
+  height: 500,
+  padding: 8,
+  x: 0,
+  y: 0,
+};
+
+const timeframeProps = {
+  msDuration: 12 * 60 * 60 * 1000,
+  startTime: new Date().setHours(8, 0, 0, 0),
+};
+
 export default function History() {
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState<number[][]>([]);
   useEffect(() => {
-    const localSession = JSON.parse(
-      window.localStorage.getItem("sessions") ?? "[4, 1500004]"
-    );
-    setSessions(localSession);
+    // const localSession = JSON.parse(
+    //   window.localStorage.getItem("sessions") ?? "[4, 1500004]"
+    // );
+    const now = Date.now();
+    const refPoint = [now - 1500000, now];
+    const before = refPoint.map((timestamp) => timestamp - 2500000);
+    const beforeBefore = refPoint.map((timestamp) => timestamp - 5000000);
+    setSessions([beforeBefore, before, refPoint]);
   }, []);
 
   return sessions.length === 0 ? (
     <p>Missing session data.</p>
   ) : (
-    <Visualization>
-      {sessions.map(() => (
-        <Dumbbell {...makeDumbbellFromSession()} />
-      ))}
-    </Visualization>
+    <Visualization
+      containerProps={containerProps}
+      timeframeProps={timeframeProps}
+      renderChildren={(viz) => {
+        return (
+          <>
+            <YAxis viz={viz} tickCount={12} />
+            {sessions.map((session) => (
+              <Dumbbell {...makeDumbbellFromSession(session[0], session[1])} />
+            ))}
+          </>
+        );
+      }}
+    />
   );
 }
