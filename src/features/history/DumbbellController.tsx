@@ -2,16 +2,19 @@
 
 import type { Viz } from "./Visualization";
 import Dumbbell from "./Dumbbell";
+import formatTimeHHMM from "./formatTime";
 
 interface IDumbbell {
   x: number;
   y1: number;
   y2: number;
   radius: number;
+  label1: string;
+  label2: string;
 }
 
 function makeDumbbell(props: IDumbbell) {
-  const { x, radius } = props;
+  const { x, radius, label1, label2 } = props;
   const halfRadius = radius / 2;
   const quarterRadius = halfRadius / 2;
   const startY = props.y1;
@@ -19,14 +22,14 @@ function makeDumbbell(props: IDumbbell) {
   const spanLength = endY - startY;
 
   const dumbballStats = {
-    startProps: { cx: x, cy: startY, r: radius, "aria-label": "YOKO" },
+    startProps: { cx: x, cy: startY, r: radius, "aria-label": label1 },
     spanProps: {
       x: x - quarterRadius,
       y: startY,
       width: halfRadius,
       height: spanLength,
     },
-    endProps: { cx: x, cy: endY, r: radius, "aria-label": "ONO" },
+    endProps: { cx: x, cy: endY, r: radius, "aria-label": label2 },
   };
   return dumbballStats;
 }
@@ -44,6 +47,8 @@ function makeDumbbellFromSession(viz: Viz, startAndStop: number[]) {
     y1: timeY1 * msToPxRatio,
     y2: timeY2 * msToPxRatio,
     radius: 4,
+    label1: formatTimeHHMM(timeY1),
+    label2: formatTimeHHMM(timeY2),
   });
 }
 interface IDumbbellController {

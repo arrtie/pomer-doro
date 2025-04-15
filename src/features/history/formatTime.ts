@@ -1,6 +1,7 @@
 /** @format */
 
-export default function formatTimeHHMM(date = new Date()) {
+export default function formatTimeHHMM(dateAsNumber: number) {
+  const date = new Date(dateAsNumber);
   // display the Date instance as HH:MM in 24hr format
   const options = {
     hour: "2-digit",

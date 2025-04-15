@@ -18,17 +18,23 @@ const timeframeProps = {
   startTime: new Date().setHours(8, 0, 0, 0),
 };
 
+const generateFakeSessions = () => {
+  const now = new Date().setHours(13, 0, 0, 0);
+  const refPoint = [now - 1500000, now];
+  const before = refPoint.map((timestamp) => timestamp - 2500000);
+  const beforeBefore = refPoint.map((timestamp) => timestamp - 5000000);
+  return [beforeBefore, before, refPoint];
+};
+
 export default function History() {
   const [sessions, setSessions] = useState<number[][]>([]);
   useEffect(() => {
-    // const localSession = JSON.parse(
-    //   window.localStorage.getItem("sessions") ?? "[4, 1500004]"
-    // );
-    const now = new Date().setHours(13, 0, 0, 0);
-    const refPoint = [now - 1500000, now];
-    const before = refPoint.map((timestamp) => timestamp - 2500000);
-    const beforeBefore = refPoint.map((timestamp) => timestamp - 5000000);
-    setSessions([beforeBefore, before, refPoint]);
+    const localSessions = JSON.parse(
+      window.localStorage.getItem("sessions") ??
+        JSON.stringify(generateFakeSessions())
+    );
+
+    setSessions(localSessions);
   }, []);
 
   return sessions.length === 0 ? (
@@ -40,9 +46,13 @@ export default function History() {
       renderChildren={(viz) => {
         return (
           <>
-            <YAxis viz={viz} tickCount={3} />
+            <YAxis viz={viz} tickCount={5} />
             {sessions.map((session) => (
-              <DumbbellController viz={viz} session={session} />
+              <DumbbellController
+                key={session[0]}
+                viz={viz}
+                session={session}
+              />
             ))}
           </>
         );
