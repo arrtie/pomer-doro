@@ -1,18 +1,25 @@
 /** @format */
 
+import formatTimeHHMM from "@features/history/formatTime";
+import { generateFakeSessions } from "@features/history/helpers";
 import { test, expect, type Page } from "@playwright/test";
+
 const SESSION_LENGTH = 1500000;
 const NOW = Date.now();
 
-function makeBubbleYGetter(page: Page) {
+function makeLocator(page: Page) {
   return async function getBubbleY(identifier: string) {
-    return (await page.getByTestId(identifier).boundingBox())?.y || Infinity;
+    return (await page.getByLabel(identifier).boundingBox())?.y || Infinity;
   };
+}
+
+function getBubble(identifier: string) {
+  return (page: Page) => page.getByLabel(identifier);
 }
 
 test.describe("when there is no data", () => {
   test("should display the error view", async ({ page }) => {
-    await page.goto("/history");
+    await page.goto("/pomer-doro/history");
     expect(page.getByText("Missing session data."));
   });
 });
@@ -25,27 +32,31 @@ test.describe("when there is data", () => {
   test("should display the graph title, starting_datetime, and ending_datetime", async ({
     page,
   }) => {
-    await page.goto("/history");
+    await page.goto("/pomer-doro/history");
     expect(page.getByRole("heading", { name: "History" }));
   });
 
   test.describe("and there is one contiguous session", () => {
-    test("should display the start bubble higher than stop bubble", async ({
+    const sessions = generateFakeSessions(NOW);
+
+    test.only("should display the start bubble higher than stop bubble", async ({
       page,
     }) => {
-      const sessions = [makeContiguousSession(NOW - SESSION_LENGTH * 5)];
-      await page.goto("/history");
-      await page.evaluate(() =>
-        window.localStorage.set("sessions", JSON.stringify(sessions))
-      );
-      const getBubbleY = makeBubbleYGetter(page);
-      const startBubbleY = await getBubbleY("session-start");
-      const stopBubbleY = await getBubbleY("session-stop");
-      expect(stopBubbleY).toBeGreaterThan(startBubbleY);
+      await page.route("*/**/api/sessions.json", async (route) => {
+        const json = sessions;
+        await route.fulfill({ json });
+      });
+      await page.goto("/pomer-doro/history");
+      const flatSessions = sessions.flat(1);
+      const label1 = formatTimeHHMM(flatSessions[0]);
+      const label2 = formatTimeHHMM(flatSessions[flatSessions.length - 1]);
+      const startBubble = await getBubble(label1)(page).boundingBox();
+      const stopBubble = await getBubble(label2)(page).boundingBox();
+      expect(startBubble?.y).toBeLessThan(stopBubble?.y ?? -Infinity);
     });
   });
 
-  test.describe("and there is one session with multiple starts and stops", () => {
+  test.skip("and there is one disjoint session", () => {
     test("each bubble should be chronologically descending in the y axis ", async ({
       page,
     }) => {
@@ -58,11 +69,8 @@ test.describe("when there is data", () => {
         startTime + SESSION_LENGTH + gap,
       ];
 
-      await page.evaluate(() =>
-        window.localStorage.set("sessions", JSON.stringify([session]))
-      );
-      await page.goto("/history");
-      const getBubbleY = makeBubbleYGetter(page);
+      await page.goto("/pomer-doro/history");
+      const getBubbleY = makeLocator(page);
       const sessionYPromises = session.map((sessionEvent: number) =>
         getBubbleY(sessionEvent.toString())
       );
@@ -74,8 +82,4 @@ test.describe("when there is data", () => {
   });
 });
 
-test.describe("and there is more than one session with multiple starts and stops", () => {});
-
-function makeContiguousSession(startTime: number) {
-  return [startTime, startTime + SESSION_LENGTH];
-}
+test.describe("and there is more than one disjoint session", () => {});

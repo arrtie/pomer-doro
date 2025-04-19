@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import Visualization from "./Visualization";
 import YAxis from "./YAxis";
 import DumbbellController from "./DumbbellController";
+import getSessions from "./getSessions";
+import { getFirstAndLast } from "./helpers";
+const MIN_DURATION = 8 * 60 * 60 * 1000;
 
 const containerProps = {
   width: 500,
@@ -14,27 +17,32 @@ const containerProps = {
 };
 
 const timeframeProps = {
-  msDuration: 12 * 60 * 60 * 1000,
-  startTime: new Date().setHours(8, 0, 0, 0),
-};
-
-const generateFakeSessions = () => {
-  const now = new Date().setHours(13, 0, 0, 0);
-  const refPoint = [now - 1500000, now];
-  const before = refPoint.map((timestamp) => timestamp - 2500000);
-  const beforeBefore = refPoint.map((timestamp) => timestamp - 5000000);
-  return [beforeBefore, before, refPoint];
+  msDuration: 24 * 60 * 60 * 1000,
+  startTime: new Date().setHours(0, 0, 0, 0),
 };
 
 export default function History() {
   const [sessions, setSessions] = useState<number[][]>([]);
-  useEffect(() => {
-    const localSessions = JSON.parse(
-      window.localStorage.getItem("sessions") ??
-        JSON.stringify(generateFakeSessions())
-    );
+  const [timeframe, setTimeframe] = useState(timeframeProps);
 
-    setSessions(localSessions);
+  useEffect(() => {
+    getSessions()
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data: ", data);
+        setSessions(data);
+        const [first, last] = getFirstAndLast(data);
+        if (first != null && last != null) {
+          const duration = last - first;
+          setTimeframe({
+            startTime: first - 60 * 60 * 1000,
+            msDuration: duration > MIN_DURATION ? duration : MIN_DURATION,
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, []);
 
   return sessions.length === 0 ? (
@@ -42,7 +50,7 @@ export default function History() {
   ) : (
     <Visualization
       containerProps={containerProps}
-      timeframeProps={timeframeProps}
+      timeframeProps={timeframe}
       renderChildren={(viz) => {
         return (
           <>
